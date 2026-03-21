@@ -130,11 +130,17 @@ src/
 
 **No API layer.** The Supabase JS client queries Postgres directly from the browser. RLS enforces that users can only access their own rows — the JWT from Auth is attached to every query automatically. Adding an Express server or Lambda between client and Supabase would add latency, a deployment surface, and code to maintain for no security benefit.
 
-**Anon key in the client bundle is fine.** The Supabase anon key is a publishable key, not a secret. The service role key — which bypasses RLS — never touches the client.
+**Anon key in the client bundle is fine.** The Supabase anon key is a publishable key, not a secret. The service role key — which bypasses RLS entirely — must never be added to `.env.example`, `.env.local`, or any `VITE_`-prefixed variable. It should not exist anywhere near the frontend.
+
+**`redirectTo: window.location.origin` — do not hardcode a URL.** Using `window.location.origin` means the OAuth redirect works correctly in local dev, Netlify production, and Netlify preview deploys without any configuration change. A hardcoded `localhost` or production URL will break in at least one of those environments.
+
+**No flash of unauthenticated content.** `ProtectedRoute` returns `null` while `session === undefined` (the loading state before Supabase resolves the session on mount). This prevents a brief render of the login screen on page reload for authenticated users. Don't replace this with a naive `if (!session) redirect` — that fires before the session check completes.
 
 **Session management via `onAuthStateChange`, not polling.** The auth state listener handles token refresh automatically. Don't call `getSession()` on a timer.
 
 **RLS policy — start strict.** Use `auth.uid() = user_id` on all tables. Add permissive policies only with a specific, documented reason.
+
+**Scope: client-to-Supabase only.** All data operations go directly from the browser to Supabase via the JS client. This covers the majority of personal tool and light SaaS use cases. If you need server-side logic — background jobs, third-party API calls that require secrets, webhooks — add Netlify Functions alongside this template; they deploy from the same repo with no additional infrastructure.
 
 ---
 

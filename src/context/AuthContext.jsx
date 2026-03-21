@@ -44,6 +44,9 @@ export function AuthProvider({ children }) {
     supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
+        // window.location.origin works in all environments automatically:
+        // local dev (http://localhost:5173), Netlify production, and Netlify preview deploys.
+        // No hardcoded URL needed — do not replace with a static value.
         redirectTo: window.location.origin,
         scopes: 'openid profile email',
       },
