@@ -169,4 +169,4 @@ Every push to the connected branch triggers a production deploy. Pull requests g
 
 ## Related
 
-This template is described in the [React + Netlify + Supabase + SSO playbook entry](https://ekahle2-portfolio.netlify.app/playbook?entry=react_netlify_supabase_sso) — including the architectural rationale and a scaffold prompt you can hand to an AI agent.
+This template is described in the [React + Netlify + Supabase + SSO playbook entry](https://edwardkahler.com/playbook?entry=react_netlify_supabase_sso) — including the architectural rationale and a scaffold prompt you can hand to an AI agent.
